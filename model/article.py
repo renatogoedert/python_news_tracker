@@ -1,3 +1,7 @@
+from flask_sqlalchemy import SQLAlchemy
+
+db = SQLAlchemy()
+
 class ArticleModel(db.Model):
     __tablename__ = 'articles'
 
@@ -6,12 +10,8 @@ class ArticleModel(db.Model):
     title = db.Column(db.String, nullable=False)
     author = db.Column(db.String)
     published_date = db.Column(db.DateTime)
-    summary = db.Column(db.Text)
     content = db.Column(db.Text)
-    source = db.Column(db.String)
-    category = db.Column(db.String)
     keywords = db.Column(db.ARRAY(db.String))
-    language = db.Column(db.String)
     created_at = db.Column(db.DateTime, default=db.func.now())
 
     def __init__(self, url, title, author=None, published_date=None, summary=None, content=None, source=None, category=None, keywords=None, language=None):
@@ -19,9 +19,5 @@ class ArticleModel(db.Model):
         self.title = title
         self.author = author
         self.published_date = published_date
-        self.summary = summary
         self.content = content
-        self.source = source
-        self.category = category
         self.keywords = keywords
-        self.language = language
