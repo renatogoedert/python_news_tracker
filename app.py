@@ -84,6 +84,38 @@ def get_all_articles():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+#get article by id
+@app.route('/get-article', methods=['GET'])
+def get_article():
+    article_id = request.args.get('id')
+    url = request.args.get('url')
+
+    if not url and not article_id:
+        return jsonify({'error': ' no ID or URL provided'}), 400 
+
+    try:
+        if article_id:
+            article = ArticleModel.query.get(article_id)
+        else:
+            article = ArticleModel.query.filter_by(url=url).first()
+
+        if not article:
+            return jsonify({'error': 'Article not found'}), 404
+
+        return jsonify({
+            'id': article.id,
+            'url': article.url,
+            'title': article.title,
+            'author': article.author,
+            'published_date': article.published_date.isoformat() if article.published_date else None,
+            'content': article.content,
+            'keywords': article.keywords
+        }), 200
+
+    except Excepition as e:
+        return jsonify({'error': str(e)}), 500
+
+
 #runs flask app
 if __name__ == '__main__':
     app.run(debug=True)
