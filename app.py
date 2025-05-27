@@ -55,6 +55,35 @@ def add_article():
     except Exception as e:
         return jsonify({'error': str(e)}),500
 
+#get all articles
+@app.route('/get-all-articles', methods=['GET'])
+def get_all_articles():
+    try:
+        #add pagination
+        page = request.args.get('page', default=1, type=int)
+        per_page = request.args.get('per_page',default=10,type=int)
+
+        pagination = ArticleModel.query.paginate(page=page, per_page=per_page, error_out=False)
+        articles_list = [{
+            'url': article.url,
+            'title': article.title,
+            'author': article.author,
+            'published_date': article.published_date.isoformat() if article.published_date else None,
+            'content': article.content,
+            'keywords': article.keywords
+        } for article in pagination.items]
+
+        return jsonify({
+            'page': page,
+            'per_page': per_page,
+            'total': pagination.total,
+            'pages': pagination.pages,
+            'articles': articles_list
+        }), 200
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
 #runs flask app
 if __name__ == '__main__':
     app.run(debug=True)
