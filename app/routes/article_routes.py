@@ -1,25 +1,12 @@
-from flask import Flask, request, jsonify
-from flask_sqlalchemy import SQLAlchemy
+from flask import Blueprint, request, jsonify
 from newspaper import Article
+from app.models.article import ArticleModel
+from app.extensions import db
 
-from model.article import ArticleModel, db
-
-#initialize flask
-app = Flask(__name__)
-
-#set up db
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://admin_username:admin_password@localhost:5432/news_db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-#initialize db
-db.init_app(app)
-
-#create tables if they don't exist
-with app.app_context():
-    db.create_all()
+article_bp = Blueprint('article_bp', __name__)
 
 #post request to add article, it recives the url and extracts fields using newspaper
-@app.route('/add-article', methods=['POST'])
+@article_bp.route('/add-article', methods=['POST'])
 def add_article():
     data = request.get_json()
     url = data.get('url')
@@ -56,7 +43,7 @@ def add_article():
         return jsonify({'error': str(e)}),500
 
 #get all articles
-@app.route('/get-all-articles', methods=['GET'])
+@article_bp.route('/get-all-articles', methods=['GET'])
 def get_all_articles():
     try:
         #add pagination
@@ -85,7 +72,7 @@ def get_all_articles():
         return jsonify({'error': str(e)}), 500
 
 #get article by id
-@app.route('/get-article', methods=['GET'])
+@article_bp.route('/get-article', methods=['GET'])
 def get_article():
     article_id = request.args.get('id')
     url = request.args.get('url')
@@ -116,7 +103,7 @@ def get_article():
         return jsonify({'error': str(e)}), 500
 
 #get last article
-@app.route('/get-latest-article', methods=['GET'])
+@article_bp.route('/get-latest-article', methods=['GET'])
 def get_lastest_article():
     try:
         article = ArticleModel.query.order_by(ArticleModel.published_date.desc()).first()
@@ -136,7 +123,3 @@ def get_lastest_article():
     
     except Exception as e:
         return jsonify({'error': str(e)}),500
-
-#runs flask app
-if __name__ == '__main__':
-    app.run(debug=True)
