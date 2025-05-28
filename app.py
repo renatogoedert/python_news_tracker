@@ -112,9 +112,30 @@ def get_article():
             'keywords': article.keywords
         }), 200
 
-    except Excepition as e:
+    except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+#get last article
+@app.route('/get-latest-article', methods=['GET'])
+def get_lastest_article():
+    try:
+        article = ArticleModel.query.order_by(ArticleModel.published_date.desc()).first()
+
+        if not article:
+            return jsonify({'error':'No Article found'}), 404
+
+        return jsonify({
+            'id': article.id,
+            'url': article.url,
+            'title': article.title,
+            'author': article.author,
+            'published_date': article.published_date.isoformat() if article.published_date else None,
+            'content': article.content,
+            'keywords': article.keywords
+        }), 200
+    
+    except Exception as e:
+        return jsonify({'error': str(e)}),500
 
 #runs flask app
 if __name__ == '__main__':
