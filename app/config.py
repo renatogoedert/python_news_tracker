@@ -1,3 +1,4 @@
+#configuration settings, could have diferent confs for dev, test, and prod
 import os
 
 class Config:

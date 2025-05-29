@@ -8,6 +8,27 @@ article_bp = Blueprint('article_bp', __name__)
 #post request to add article, it recives the url and extracts fields using newspaper
 @article_bp.route('/add-article', methods=['POST'])
 def add_article():
+    """
+    Add article to DB
+    ---
+    parameters:
+      - name: url
+        in: query
+        type: string
+        required: false
+    responses:
+      200:
+        description: Article already exists
+      201:
+        description: Article added successfully
+      400:
+        description: no URL provided
+      415:
+        description: Unsupported media type
+      415:
+        description: Unsupported media type
+    """
+        
     data = request.get_json()
     url = data.get('url')
     if not url:
@@ -45,6 +66,24 @@ def add_article():
 #get all articles
 @article_bp.route('/get-all-articles', methods=['GET'])
 def get_all_articles():
+    """
+    Add all articles from DB
+    ---
+    parameters:
+      - name: page
+        in: query
+        type: int
+        required: false
+      - name: per_page
+        in: query
+        type: int
+        required: false
+    responses:
+      200:
+        description: List Articles
+      415:
+        description: Unsupported media type
+    """
     try:
         #add pagination
         page = request.args.get('page', default=1, type=int)
@@ -74,6 +113,28 @@ def get_all_articles():
 #get article by id
 @article_bp.route('/get-article', methods=['GET'])
 def get_article():
+    """
+    Get an article by ID or URL (at least one required)
+    ---
+    parameters:
+      - name: id
+        in: query
+        type: integer
+        required: false
+      - name: url
+        in: query
+        type: string
+        required: false
+    responses:
+      200:
+        description: Article found
+      400:
+        description: no ID or URL provided
+      404:
+        description: Article not found
+      415:
+        description: Unsupported media type
+    """
     article_id = request.args.get('id')
     url = request.args.get('url')
 
@@ -105,6 +166,17 @@ def get_article():
 #get last article
 @article_bp.route('/get-latest-article', methods=['GET'])
 def get_lastest_article():
+    """
+    Get latest article
+    ---
+    responses:
+      200:
+        description: Article found
+      404:
+        description: Article not found
+      415:
+        description: Unsupported media type
+    """
     try:
         article = ArticleModel.query.order_by(ArticleModel.published_date.desc()).first()
 
