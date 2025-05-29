@@ -2,6 +2,10 @@ from flask import Blueprint, request, jsonify
 from newspaper import Article
 from app.models.article import ArticleModel
 from app.extensions import db
+import nltk
+
+nltk.download('punkt')
+nltk.download('punkt_tab')
 
 article_bp = Blueprint('article_bp', __name__)
 
@@ -38,6 +42,7 @@ def add_article():
         article = Article(url)
         article.download()
         article.parse()
+        article.nlp()
 
         #check if article exists
         existing_article = ArticleModel.query.filter_by(url=url).first()
@@ -178,7 +183,7 @@ def get_lastest_article():
         description: Unsupported media type
     """
     try:
-        article = ArticleModel.query.order_by(ArticleModel.published_date.desc()).first()
+        article = ArticleModel.query.order_by(ArticleModel.created_at.desc()).first()
 
         if not article:
             return jsonify({'error':'No Article found'}), 404
