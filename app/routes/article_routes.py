@@ -29,12 +29,9 @@ def add_article():
         description: no URL provided
       415:
         description: Unsupported media type
-      415:
-        description: Unsupported media type
     """
         
-    data = request.get_json()
-    url = data.get('url')
+    url = request.args.get('url')
     if not url:
         return jsonify({'error':'no URL provided'}), 400
 
