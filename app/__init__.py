@@ -4,6 +4,7 @@ from flask import Flask
 from flasgger import Swagger
 from .extensions import db
 from .routes.article_routes import article_bp
+from .routes.author_routes import author_bp
 from .config import Config
 
 def create_app():
@@ -14,5 +15,6 @@ def create_app():
     Swagger(app)
 
     app.register_blueprint(article_bp)
+    app.register_blueprint(author_bp)
 
     return app
