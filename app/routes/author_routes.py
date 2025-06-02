@@ -43,6 +43,7 @@ def add_author():
         #create a new author instance
         new_author = AuthorModel(
             name=name,
+            articles=[],
         )
 
         #add to db
