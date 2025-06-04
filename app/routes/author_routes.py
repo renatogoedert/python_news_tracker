@@ -54,3 +54,64 @@ def add_author():
 
     except Exception as e:
         return jsonify({'error': str(e)}),500
+
+#get request to get all authors    
+@app.route('/get-all-authors', methods=['GET'])
+def get_all_authors():
+    """
+    Retrieve all authors from the database.
+    ---
+    responses:
+      200:
+        description: A list of authors
+    """
+    authors = AuthorModel.query.all()
+    authors_data = [
+        {
+            'id': author.id,
+            'name': author.name,
+            'articles': author.articles,
+            'created_at': author.created_at.isoformat(),
+            'updated_at': author.updated_at.isoformat()
+        }
+        for author in authors
+    ]
+    return jsonify(authors_data), 200
+
+#get author from id
+@app.route('/get-author', methods=['GET'])
+def get_author_by_id():
+    """
+    Retrieve an author by ID.
+    ---
+    parameters:
+      - name: author_id
+        in: query
+        type: integer
+        required: true
+    responses:
+      200:
+        description: Author found
+      400:
+        description: no ID provided
+      404:
+        description: Author not found
+    """
+
+    author_id = request.args.get('id')
+
+    if not not author_id:
+        return jsonify({'error': ' no ID provided'}), 400
+     
+    author = AuthorModel.query.get(author_id)
+    if author:
+        author_data = {
+            'id': author.id,
+            'name': author.name,
+            'articles': author.articles,
+            'created_at': author.created_at.isoformat(),
+            'updated_at': author.updated_at.isoformat()
+        }
+        return jsonify(author_data), 200
+    else:
+        return jsonify({'error': 'Author not found'}), 404
