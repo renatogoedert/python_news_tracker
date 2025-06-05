@@ -67,16 +67,7 @@ def get_all_authors():
         description: A list of authors
     """
     authors = AuthorModel.query.all()
-    authors_data = [
-        {
-            'id': author.id,
-            'name': author.name,
-            'articles': author.articles,
-            'created_at': author.created_at.isoformat(),
-            'updated_at': author.updated_at.isoformat()
-        }
-        for author in authors
-    ]
+    authors_data = [author.to_dict() for author in authors]
     return jsonify(authors_data), 200
 
 #get author from id
@@ -106,13 +97,7 @@ def get_author_by_id():
      
     author = AuthorModel.query.get(author_id)
     if author:
-        author_data = {
-            'id': author.id,
-            'name': author.name,
-            'articles': author.articles,
-            'created_at': author.created_at.isoformat(),
-            'updated_at': author.updated_at.isoformat()
-        }
+        author_data = author.to_dict()
         return jsonify(author_data), 200
     else:
         return jsonify({'error': 'Author not found'}), 404
