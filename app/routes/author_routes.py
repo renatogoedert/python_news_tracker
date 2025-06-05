@@ -1,4 +1,5 @@
 from flask import Blueprint, request, jsonify
+from sqlalchemy import func
 from app.models.author import AuthorModel
 from app.extensions import db
 import nltk
@@ -100,7 +101,7 @@ def get_author_by_id():
 
     author_id = request.args.get('id')
 
-    if not not author_id:
+    if not author_id:
         return jsonify({'error': ' no ID provided'}), 400
      
     author = AuthorModel.query.get(author_id)
@@ -112,6 +113,38 @@ def get_author_by_id():
             'created_at': author.created_at.isoformat(),
             'updated_at': author.updated_at.isoformat()
         }
+        return jsonify(author_data), 200
+    else:
+        return jsonify({'error': 'Author not found'}), 404
+    
+#get author id
+@author_bp.route('/get-author-id', methods=['GET'])
+def get_author_id():
+    """
+    Retrieve an author ID.
+    ---
+    parameters:
+      - name: author
+        in: query
+        type: string
+        required: true
+    responses:
+      200:
+        description: Author found
+      400:
+        description: no Name provided
+      404:
+        description: Author not found
+    """
+
+    author_name = request.args.get('name')
+
+    if not author_name:
+        return jsonify({'error': ' no Name provided'}), 400
+     
+    author = AuthorModel.query.filter(func.lower(AuthorModel.name)==author_name.lower()).first()
+    if author:
+        author_data =  author.id,
         return jsonify(author_data), 200
     else:
         return jsonify({'error': 'Author not found'}), 404

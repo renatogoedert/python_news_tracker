@@ -46,11 +46,12 @@ def add_article():
         if existing_article:
             return jsonify({'message': 'Article already exists'}), 200
         
+        #extract the first author name
         #create a new article instance
         new_article = ArticleModel(
             url=url,
             title=article.title,
-            author_id=0,
+            author_id=[article.authors[0] if article.authors else None],
             published_date=article.publish_date,
             content=article.text,
             keywords=article.keywords,
