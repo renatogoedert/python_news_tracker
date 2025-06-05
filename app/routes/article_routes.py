@@ -1,8 +1,11 @@
 from flask import Blueprint, request, jsonify
 from newspaper import Article
+from sqlalchemy import func
 from app.models.article import ArticleModel
 from app.extensions import db
 import nltk
+
+from app.models.author import AuthorModel
 
 nltk.download('punkt')
 nltk.download('punkt_tab')
@@ -47,11 +50,26 @@ def add_article():
             return jsonify({'message': 'Article already exists'}), 200
         
         #extract the first author name
+        author_name = article.authors[0] if article.authors else None
+        author_id = None
+
+        print(author_name)
+        if author_name:
+            existing_author = AuthorModel.query.filter(func.lower(AuthorModel.name) == author_name.lower()).first()
+
+            if existing_author:
+                author_id = existing_author.id
+            else:
+                new_author = AuthorModel(name=author_name, articles=[])
+                db.session.add(new_author)
+                db.session.commit()
+                author_id.new_author.id
+
         #create a new article instance
         new_article = ArticleModel(
             url=url,
             title=article.title,
-            author_id=[article.authors[0] if article.authors else None],
+            author_id=author_id,
             published_date=article.publish_date,
             content=article.text,
             keywords=article.keywords,
