@@ -50,7 +50,7 @@ def add_article():
         new_article = ArticleModel(
             url=url,
             title=article.title,
-            author=article.authors[0] if article.authors else None,
+            author_id=0,
             published_date=article.publish_date,
             content=article.text,
             keywords=article.keywords,
@@ -95,7 +95,7 @@ def get_all_articles():
         articles_list = [{
             'url': article.url,
             'title': article.title,
-            'author': article.author,
+            'author_id': article.author_id,
             'published_date': article.published_date.isoformat() if article.published_date else None,
             'content': article.content,
             'keywords': article.keywords
@@ -156,7 +156,7 @@ def get_article():
             'id': article.id,
             'url': article.url,
             'title': article.title,
-            'author': article.author,
+            'author_id': article.author_id,
             'published_date': article.published_date.isoformat() if article.published_date else None,
             'content': article.content,
             'keywords': article.keywords
@@ -189,7 +189,7 @@ def get_lastest_article():
             'id': article.id,
             'url': article.url,
             'title': article.title,
-            'author': article.author,
+            'author_id': article.author_id,
             'published_date': article.published_date.isoformat() if article.published_date else None,
             'content': article.content,
             'keywords': article.keywords

@@ -6,7 +6,7 @@ class ArticleModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     url = db.Column(db.String, nullable=False, unique=True)
     title = db.Column(db.String, nullable=False)
-    author = db.Column(db.String)
+    author_id = db.Column(db.ARRAY(db.Integer))
     published_date = db.Column(db.DateTime)
     content = db.Column(db.Text)
     keywords = db.Column(db.ARRAY(db.String))

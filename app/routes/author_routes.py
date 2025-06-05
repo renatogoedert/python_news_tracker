@@ -56,7 +56,7 @@ def add_author():
         return jsonify({'error': str(e)}),500
 
 #get request to get all authors    
-@app.route('/get-all-authors', methods=['GET'])
+@author_bp.route('/get-all-authors', methods=['GET'])
 def get_all_authors():
     """
     Retrieve all authors from the database.
@@ -79,7 +79,7 @@ def get_all_authors():
     return jsonify(authors_data), 200
 
 #get author from id
-@app.route('/get-author', methods=['GET'])
+@author_bp.route('/get-author', methods=['GET'])
 def get_author_by_id():
     """
     Retrieve an author by ID.
