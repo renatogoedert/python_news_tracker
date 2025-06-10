@@ -29,10 +29,11 @@ def create_app():
 
     scheduler = BackgroundScheduler()
     scheduler.add_job(
-        add_news_from_independent_rss(app_context=app.app_context()),
-        IntervalTrigger(minutes=15), 
+        add_news_from_independent_rss, 
+        IntervalTrigger(minutes=15),
+        args=[app.app_context()],     
         id='independent_news_scraper',
-        replace_existing=True 
+        replace_existing=True
     )
     scheduler.start()
 
