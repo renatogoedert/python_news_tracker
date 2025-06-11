@@ -13,12 +13,12 @@ from app.models.author import AuthorModel
 def add_news_from_rss(app_context):
     print("testing")
     """
-    Parses the Independent.ie RSS feed, extracts full content using newspaper3k,
+    Parses a RSS url, extracts full content using newspaper3k,
     and adds new articles to the database.
     """
     with app_context:
         rss_url = current_app.config.get('SOURCE_URL')
-        print(f"[{datetime.now()}] Checking Independent.ie RSS feed...")
+        print(f"[{datetime.now()}] Checking URL RSS feed...")
         feed = feedparser.parse(rss_url)
 
         if feed.bozo:
