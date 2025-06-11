@@ -1,6 +1,6 @@
 import feedparser
 from datetime import datetime, timezone
-import pytz
+from flask import current_app
 from dateutil.parser import parse
 from newspaper import Article
 from sqlalchemy import func
@@ -9,20 +9,20 @@ from app.extensions import db
 from app.models.article import ArticleModel
 from app.models.author import AuthorModel
 
-INDEPENDENT_RSS_URL = "https://www.independent.ie/rss"
 
-def add_news_from_independent_rss(app_context):
+def add_news_from_rss(app_context):
     print("testing")
     """
     Parses the Independent.ie RSS feed, extracts full content using newspaper3k,
     and adds new articles to the database.
     """
     with app_context:
+        rss_url = current_app.config.get('SOURCE_URL')
         print(f"[{datetime.now()}] Checking Independent.ie RSS feed...")
-        feed = feedparser.parse(INDEPENDENT_RSS_URL)
+        feed = feedparser.parse(rss_url)
 
         if feed.bozo:
-            print(f"Warning: RSS feed issues for {INDEPENDENT_RSS_URL}: {feed.bozo_exception}")
+            print(f"Warning: RSS feed issues for {rss_url}: {feed.bozo_exception}")
 
         for entry in feed.entries:
             try:

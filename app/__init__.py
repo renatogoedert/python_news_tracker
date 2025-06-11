@@ -4,9 +4,10 @@ from flask import Flask
 from flasgger import Swagger
 
 from .extensions import db
-from .tasks import add_news_from_independent_rss
+from .tasks import add_news_from_rss
 from .routes.article_routes import article_bp
 from .routes.author_routes import author_bp
+from .routes.tracker_routes import tracker_bp
 from .config import Config
 
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -25,11 +26,12 @@ def create_app():
 
     app.register_blueprint(article_bp)
     app.register_blueprint(author_bp)
+    app.register_blueprint(tracker_bp)
 
 
     scheduler = BackgroundScheduler()
     scheduler.add_job(
-        add_news_from_independent_rss, 
+        add_news_from_rss, 
         IntervalTrigger(minutes=15),
         args=[app.app_context()],     
         id='independent_news_scraper',
