@@ -20,7 +20,6 @@ A Flask application using SQLAlchemy ORM, APScheduler for tracking news, Postgre
 
 ```
 ├── app/
-│   ├── __init__.py
 │   ├── models/
 |       ├──article.py
 |       └──author.py
