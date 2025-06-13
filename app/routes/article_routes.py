@@ -51,10 +51,10 @@ def add_article():
         
         #extract the first author name
         author_name = article.authors[0] if article.authors else None
-        author_id = None
+        author = None
 
         if author_name:
-            existing_author = AuthorModel.query.filter(func.lower(AuthorModel.name) == author_name.lower()).first()
+            author = AuthorModel.query.filter(func.lower(AuthorModel.name) == author_name.lower()).first()
 
             if not author:
                 author = AuthorModel(name=author_name)
