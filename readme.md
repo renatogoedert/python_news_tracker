@@ -55,9 +55,14 @@ cd flask-scheduler-app
 ### 2. Create a `.env` file
 
 ```env
+# PostgreSQL Configuration
+POSTGRES_USER=admin_username
+POSTGRES_PASSWORD=admin_password
+POSTGRES_DB=news_db
+
+# Flask Configuration
 FLASK_APP=app
 FLASK_ENV=development
-DATABASE_URL=postgresql://postgres:password@db:5432/app_db
 ```
 
 ### 3. Build and Run Docker containers
